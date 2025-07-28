@@ -20,7 +20,7 @@ st.set_page_config(
 @st.cache_data
 def load_data():
     try:
-        df = pd.read_csv('winequalityN.csv')
+        df = pd.read_csv('Data/winequalityN.csv')
 
         
         df['quality'] = df['quality'].apply(lambda x: 1 if x >= 6 else 0)
