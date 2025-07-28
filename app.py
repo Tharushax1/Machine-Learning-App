@@ -25,7 +25,7 @@ def load_data():
 
         df['quality'] = df['quality'].apply(lambda x: 1 if x >= 6 else 0)
         df = df.fillna(df.mean(numeric_only=True))
-        df = pd.get_dummies(df, columns=['type'], drop_first=True)
+        df = pd.get_dummies(df, columns=['type'], drop_first=False)
 
         return df
     except:
