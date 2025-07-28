@@ -17,24 +17,21 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+
 @st.cache_data
 def load_data():
     try:
         df = pd.read_csv('Data/winequalityN.csv')
 
-        
         df['quality'] = df['quality'].apply(lambda x: 1 if x >= 6 else 0)
-
-        
         df = df.fillna(df.mean(numeric_only=True))
-
-        
         df = pd.get_dummies(df, columns=['type'], drop_first=True)
 
         return df
     except:
         st.error("❌ Could not load dataset! Make sure the filename is correct.")
         return None
+
 
 @st.cache_resource
 def load_model():
@@ -222,10 +219,17 @@ def show_performance_page(model, df):
 
     if hasattr(model, 'feature_importances_'):
         st.subheader("🎯 Feature Importance")
+
         feature_names = [col for col in df.columns if col != 'quality']
+        importances = model.feature_importances_
+
+        if len(feature_names) != len(importances):
+            st.warning(f"⚠️ Feature count mismatch! Model has {len(importances)} features, but data has {len(feature_names)}.")
+            return
+
         importance_df = pd.DataFrame({
             'Feature': feature_names,
-            'Importance': model.feature_importances_
+            'Importance': importances
         }).sort_values('Importance', ascending=False)
 
         fig = px.bar(
